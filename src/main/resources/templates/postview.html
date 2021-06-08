@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="/header :: header_h">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="/header :: header"></div>
+
+<div class="container">
+  <table class="table table-striped" style="text-align:center; border:solid gray 1px">
+
+    <tr>
+      <td>제목</td>
+      <td colspan="2" th:text="${postDto.title}"></td>
+    </tr>
+
+    <tr>
+      <td>내용</td>
+      <td colspan="2" th:text="${postDto.contents}"></td>
+    </tr>
+
+    <tr>
+      <td>조회수</td>
+      <td colspan="2" th:text="${postDto.count}"></td>
+    </tr>
+
+    <tr>
+      <td>작성일</td>
+      <td colspan="2" th:text="${postDto.createDate}"></td>
+    </tr>
+
+  </table>
+
+  <a class="btn btn-info" th:href="@{postlist}">목록</a>
+  <a class="btn btn-info" th:href="@{postlist}">수정</a>
+  <a class="btn btn-info" th:href="@{postlist}">삭제</a>
+
+</div>
+
+</body>
+</html>

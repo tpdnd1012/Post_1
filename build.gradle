@@ -1,0 +1,57 @@
+buildscript {
+    ext{
+        springBootVersion = '2.1.9.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+
+apply plugin: 'eclipse'
+
+apply plugin: 'org.springframework.boot'
+
+apply plugin: 'io.spring.dependency-management'
+
+group 'spring'
+version '1.4-SNAPSHOT-'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+
+    //  스프링부트 웹 라이브러리 가져오기 =>  관련된 @ 제공 받을수 있다
+    compile('org.springframework.boot:spring-boot-starter-web')
+    // 타임리프 : java <----->  프론트엔드 연결
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    // JPA : 관계형 데이터베이스 사용
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    // H2 : 관계형 데이터베이스 관리 시스템 = mysql워크벤치 역활
+    compile('com.h2database:h2')
+    // 롬복 : 생성자 , get , set , 필드 등
+    compile('org.projectlombok:lombok')
+    // devtools : 자동빌더
+    //compile('org.springframework.boot:spring-boot-devtools')
+    // 설정 :  파일 => 설정 = > 빌드 => 컴파일러 => 자동빌더
+    // 레스트리 변경 : ctrl+alt+shift+ /  => 레지스트리 => compiler.automake.allow.when.app.running 체크
+    // properties 설정 :
+
+    // OATUH2 : SNS 로그인
+    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // 시큐리티 설치 [ 타임리프 ]
+    //implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    // 시큐리티 설치 [ 스프링부트 ]
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+}
