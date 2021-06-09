@@ -32,9 +32,37 @@
 
   </table>
 
-  <a class="btn btn-info" th:href="@{postlist}">목록</a>
-  <a class="btn btn-info" th:href="@{postlist}">수정</a>
-  <a class="btn btn-info" th:href="@{postlist}">삭제</a>
+  <a class="btn btn-info" th:href="@{/postlist}">목록</a>
+  <a class="btn btn-info" th:href="@{'/postupdate/' + ${postDto.id}}">수정</a>
+  <a class="btn btn-info" th:href="@{'/postdelete/' + ${postDto.id}}">삭제</a>
+
+  <!-- 댓글 작성 form -->
+  <form action="/replywrite" method="post">
+
+    <!-- 댓글 작성시 게시물 번호 같이 보내기 -->
+    <input type="hidden" name="postid" th:value="${postDto.id}">
+
+    <table>
+      <tr>
+
+        <td><textarea name="replycontents"></textarea></td>
+
+        <td><input type="submit" value="댓글등록" class="btn btn-info"></td>
+
+      </tr>
+    </table>
+
+  </form>
+
+  <!-- 댓글 표시 table -->
+  <table>
+    <tr th:each = "replyDto : ${replyDtos}">
+      <td><input type="text" th:value="${replyDto.id}" name="id"></td>
+      <td><input type="text" th:value="${replyDto.postid}" name="postid"></td>
+      <td><input type="text" th:value="${replyDto.replycontents}" name="replycontents"></td>
+      <td><a th:href="@{/replydelete(id=${replyDto.id}, postid=${replyDto.postid})}">삭제</a></td>
+    </tr>
+  </table>
 
 </div>
 
