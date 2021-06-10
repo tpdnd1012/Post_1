@@ -3,12 +3,13 @@
 <head th:replace="/header :: header_h">
     <meta charset="UTF-8">
     <title>Title</title>
+
 </head>
 <body>
 <div th:replace="/header :: header"></div>
 
 <div class="container">
-  <form method="post" action="/postwrite">
+  <form method="post" action="/postwrite" name="postwriteform">
 
     <div class="form-group">
       <label>Title</label>
@@ -20,7 +21,7 @@
       <textarea name="contents" class="form-control"></textarea>
     </div>
 
-    <input type="submit" value="등록" class="btn btn-info">
+    <input type="button" value="등록" class="btn btn-info" onclick="postwrite()">
 
   </form>
 </div>

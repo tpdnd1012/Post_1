@@ -28,6 +28,63 @@
     </table>
     <a th:href="@{/postwrite}" class="btn btn-info">등록</a>
 
+    <!-- 페이징 처리 -->
+    <div id="pag" style="text-align:center;">
+        <!--시작페이지 , 끝페이지 설정-->
+        <!-- 타임리프 변수 정의 : th:with= -->
+        <!-- 첫페이지번호 :  ( 현재페이지/10 ) * 10 + 1 -->
+        <!-- 0/10  * 10 + 1 -> 1 -->
+        <!-- 13/10 * 10 + 1 => 11 -->
+
+        <ul class="pagination justify-content-center"
+            th:with="start=${T(Math).floor(postDtos.number/10) * 10 + 1},
+                    last=(${start + 9 < postDtos.totalPages ? start + 9 : postDtos.totalPages})">
+
+            <!-- 첫 페이지 이동 -->
+            <li class="page-item">
+                <a class="page-link" th:href="@{/postlist(page=1)}"> << </a>
+            </li>
+
+            <!-- 이전 페이지 이동 -->
+            <li class="page-item" th:class="${postDtos.first} ? 'disabled'"> <!-- 첫 페이지에서 이전페이지이동 표시 X -->
+                <a class="page-link" th:href="${postDtos.first} ? '#' : @{/postlist(page=${postDtos.number})}"> < </a>
+            </li>
+
+            <!-- 페이지 번호 -->
+            <li class="page-item" th:each="page : ${#numbers.sequence(start, last)}">
+                <a class="page-link" th:href="@{/postlist(page=${page})}" th:text="${page}"></a>
+            </li>
+
+            <!-- 다음 페이지 이동 -->
+            <li class="page-item" th:class="${postDtos.last} ? 'disabled'"> <!-- 마지막페이지에서 다음페이지이동 표시 X -->
+                <a class="page-link" th:href="${postDtos.last} ? '#' : @{/postlist(page=${postDtos.number + 2})}"> > </a>
+            </li>
+
+            <!-- 마지막 페이지 이동 -->
+            <li class="page-item">
+                <a class="page-link" th:href="@{/postlist(page=${postDtos.totalPages})}"> >> </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- 검색 -->
+    <div style="text-align:center;">
+        <form action="/postsearch" method="post" name="postsearchform">
+
+            <select name="keyword">
+                <option value="id">게시물번호</option>
+                <option value="title">제목</option>
+                <option value="contents">내용</option>
+            </select>
+
+            <input type="text" name="search">
+            <input type="button" value="검색" class="btn btn-info" onclick="postsearch()">
+
+        </form>
+    </div>
+
 </div>
 
 </body>

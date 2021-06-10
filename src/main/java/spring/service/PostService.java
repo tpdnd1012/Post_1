@@ -1,6 +1,10 @@
 package spring.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import spring.domain.post.PostEntity;
 import spring.domain.post.PostRepository;
@@ -24,11 +28,35 @@ public class PostService {
 
     }
 
-    // 모든 게시물 출력
-    public List<PostDto> list() {
+    // 모든 게시물 출력 [ 검색만 했을경우, 페이징처리 x ]
+    /*public List<PostDto> list(String keyword, String search) {
+
+        List<PostEntity> postEntities = null; // 먼저 메모리할당, 전역변수
+
+        if(keyword != null || search != null) {
+
+            if(keyword.equals("title")) {
+                postEntities = postRepository.findAlltitle(search);
+            }
+
+            if(keyword.equals("contents")) {
+                postEntities = postRepository.findAllcontents(search);
+            }
+
+            *//*if(keyword.equals("name")) {
+                postEntities = postRepository.findAllname(search);
+            }*//*
+
+            if(keyword.equals("id")) {
+                postEntities = postRepository.findAllid(Long.parseLong(search));
+            }
+
+        } else { // 검색이 없는경우 모두 호출
+            postEntities = postRepository.findAll();
+        }
 
         // 모든 Entity 반환
-        List<PostEntity> postEntities = postRepository.findAll();
+       // List<PostEntity> postEntities = postRepository.findAll();
 
         // 모든 Entity --> 모든 Dto
         List<PostDto> postDtos = new ArrayList<>();
@@ -46,6 +74,42 @@ public class PostService {
 
         }
         return postDtos;
+    }*/
+
+    // 모든 게시물 출력 [ 페이징처리, 검색 ]
+    public Page<PostEntity> list(Pageable pageable, String keyword, String search) {
+
+        // 현재 페이지
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+                                        // 논리 ? 참[T] : 거짓[F]
+
+        // 현재 페이지 설정
+        pageable = PageRequest.of(page, 5, new Sort(Sort.Direction.DESC, "id"));
+                    // PageRequest.of(현재페이지, 페이지당 게시글수, sort)
+
+        // 현제 페이지 게시물 찾기
+        if(keyword != null || search != null) {
+
+            if(keyword.equals("title")) {
+                return postRepository.findAlltitle(pageable, search);
+            }
+
+            if(keyword.equals("contents")) {
+                return postRepository.findAllcontents(pageable, search);
+            }
+
+            /*if(keyword.equals("name")) {
+                return postRepository.findAllname(pageable, search);
+            }*/
+
+            if(keyword.equals("id")) {
+                return postRepository.findAllid(pageable, Long.parseLong(search));
+            }
+
+        }
+
+        return postRepository.findAll(pageable);
+
     }
 
     // 게시물 개별 출력

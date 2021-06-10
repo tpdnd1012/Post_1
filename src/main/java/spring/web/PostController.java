@@ -1,6 +1,9 @@
 package spring.web;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +13,7 @@ import spring.service.ReplyService;
 import spring.web.dto.PostDto;
 import spring.web.dto.ReplyDto;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -20,13 +24,33 @@ public class PostController {
 
     private final ReplyService replyService;
 
-    // 게시판 페이지 요청
-    @GetMapping("/postlist")
-    public String postlist(Model model) {
+    // 게시판 페이지 요청 [ 검색만 작성했을 경우 ]
+    /*@GetMapping("/postlist")
+    public String postlist(Model model, HttpServletRequest request) {
 
-        List<PostDto> postDtos = postService.list();
+        // form에서 키워드와 검색어 요청
+        String keyword = request.getParameter("keyword");
+        String search = request.getParameter("search");
+
+        List<PostDto> postDtos = postService.list(keyword, search);
 
         model.addAttribute("postDtos", postDtos);
+
+        return "postlist";
+
+    }*/
+
+    // 게시판 페이지 요청 [ 페이징처리, 검색 ]
+    @GetMapping("postlist")
+    public String postlist(Model model, HttpServletRequest request, @PageableDefault Pageable pageable) {
+
+        // form에서 키워드와 검색어 요청
+        String keyword = request.getParameter("keyword");
+        String search = request.getParameter("search");
+
+        Page<PostEntity> postEntities = postService.list(pageable, keyword, search);
+
+        model.addAttribute("postDtos", postEntities);
 
         return "postlist";
 
@@ -99,6 +123,52 @@ public class PostController {
         postService.postupdate(updateDto);
 
         return "redirect:/postlist";
+
+    }
+
+    // 게시물 검색 [ 페이징처리x, 검색만 작성했을 경우 ]
+    /*@PostMapping("/postsearch")
+    public String postsearch_c(HttpServletRequest request, Model model) {
+                            // DTO와 form 태그 name 동일한경우 DTO 자동주입
+                            // DTO 없는 경우 request 객체 만들기
+
+        String keyword = request.getParameter("keyword");
+        String search = request.getParameter("search");
+
+        // 검색이 없으면
+        if(search.equals("")) {
+
+            return "redirect:/postlist";
+
+        }
+
+        List<PostDto> postDto = postService.list(keyword, search);
+
+        model.addAttribute("postDtos", postDto);
+
+        return "postlist";
+
+    }*/
+    
+    // 게시물 검색 [ 페이징처리, 검색 ]
+    @PostMapping("postsearch")
+    public String postsearch(Model model, HttpServletRequest request, @PageableDefault Pageable pageable) {
+
+        String keyword = request.getParameter("keyword");
+        String search = request.getParameter("search");
+
+        // 검색이 없으면
+        if(search.equals("")) {
+
+            return "redirect:/postlist";
+
+        }
+
+        Page<PostEntity> postEntities = postService.list(pageable, keyword, search);
+
+        model.addAttribute("postDtos", postEntities);
+
+        return "postlist";
 
     }
 
